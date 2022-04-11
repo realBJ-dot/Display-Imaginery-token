@@ -1,0 +1,237 @@
+<!doctype html><html lang=en-us>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <style>
+        body {
+          font-family: "Lato", sans-serif;
+        }
+        
+        .sidenav {
+          height: 100%;
+          width: 160px;
+          position: fixed;
+          z-index: 1;
+          top: 0;
+          left: 0;
+          background-color: #111;
+          overflow-x: hidden;
+          padding-top: 20px;
+        }
+        
+        .sidenav a {
+          padding: 6px 8px 6px 16px;
+          text-decoration: none;
+          font-size: 25px;
+          color: #818181;
+          display: block;
+        }
+        .sidenav button {
+          padding: 6px 8px 6px 16px;
+          text-decoration: none;
+          font-size: 25px;
+          color: #818181;
+          display: block;
+        }
+        .sidenav p {
+            padding: 6px 8px 6px 16px;
+          text-decoration: none;
+          font-size: 25px;
+          color: #818181;
+          display: block;
+        }
+        
+        .sidenav a:hover {
+          color: #f1f1f1;
+        }
+        
+        .main {
+          margin-left: 160px; /* Same as the width of the sidenav */
+          font-size: 28px; /* Increased text to enable scrolling */
+          padding: 0px 10px;
+        }
+        
+        @media screen and (max-height: 450px) {
+          .sidenav {padding-top: 15px;}
+          .sidenav a {font-size: 18px;}
+        }
+        </style>
+        </head>
+        <div class="sidenav">
+            <a class="header">Sort by (High to Low)</a>
+            <button id="Price" onclick="displayByPrice()">Token's Price</button>
+            
+            <button id="time-created" onclick="displayByTime()">Time Created</button>
+            <button onClick="window.location.reload();">Clear</button>
+            <br><br>
+            <form>
+                <p>
+                    <label for="Price">Least Price:</label>
+                    <input type="int" id="leastPrice">
+                </p>
+                <button id="priceFilter">Filter Price</button>
+                <p>
+                    <label for="timeCreated">Created From:</label>
+                    <input type="int" id="leastCreatedT">
+                </p>
+                <button id="timeFilter" onclick="filterTime()">Filter Time</button>
+            </form>
+            <br><br><br><br><br><br>
+            <button onClick="window.location.reload();">Clear</button>
+        </div>
+        <body style = "position:relative; left:180px; top:2px">
+            <script> 
+                // the json file containing all the tokens
+                var data = [
+                        {
+                            "name": "10c",
+                            "price": 10,
+                            "timeCreated": "2000/10/04",
+                            "png" : "pokerimgs/10_of_clubs.png"
+                        },
+                        {
+                            "name": "10d",
+                            "price": 100,
+                            "timeCreated": "2000/10/03",
+                            "png" : "pokerimgs/10_of_diamonds.png"
+                        },
+                        {
+                            "name": "10s",
+                            "price": 1000,
+                            "timeCreated": "2000/10/02",
+                            "png" : "pokerimgs/10_of_spades.png"
+                        },
+                        {
+                            "name": "10h",
+                            "price": 10000,
+                            "timeCreated": "2000/10/01",
+                            "png": "pokerimgs/10_of_hearts.png"
+                        }, 
+                        {
+                            "name": "2c",
+                            "price": 123,
+                            "timeCreated": "2001/10/01",
+                            "png": "pokerimgs/2_of_clubs.png"
+                        }, 
+                        {
+                            "name": "2h",
+                            "price": 31415,
+                            "timeCreated": "2100/10/01",
+                            "png": "pokerimgs/2_of_hearts.png"
+                        },
+                        {
+                            "name": "3h",
+                            "price": 47265,
+                            "timeCreated": "2010/10/01",
+                            "png": "pokerimgs/3_of_hearts.png"
+                        },
+                        {
+                            "name": "kh",
+                            "price": 2.716,
+                            "timeCreated": "2020/11/01",
+                            "png": "pokerimgs/king_of_hearts.png"
+                        },
+                        {
+                            "name": "ks",
+                            "price": 1234567890,
+                            "timeCreated": "2222/12/22",
+                            "png": "pokerimgs/king_of_spades.png"
+                        },
+                        {
+                            "name": "qs",
+                            "price": 987654321,
+                            "timeCreated": "1111/11/11",
+                            "png": "pokerimgs/queen_of_spades.png"
+                        },
+                        {
+                            "name": "As",
+                            "price": 618000000,
+                            "timeCreated": "0222/02/02",
+                            "png": "pokerimgs/ace_of_spades.png"
+                        },
+                        {
+                            "name": "4s",
+                            "price": 14567890,
+                            "timeCreated": "2222/2/22",
+                            "png": "pokerimgs/4_of_spades.png"
+                        }
+
+                    ]
+                
+                //sort by elem
+                function sortByElem(elem) {
+                    return function(a, b) {    
+                            if (a[elem] < b[elem]) {    
+                                return 1;    
+                            } else if (a[elem] > b[elem]) {    
+                                return -1;    
+                            }    
+                            return 0;    
+                        }    
+                }
+                /// render stuff in the body
+                function fillStuff(data) {
+                    for (var i= 0; i < data.length; i++) {
+                        //append img first
+                        var element = document.createElement("img");
+                        element.src = data[i].png;
+                        element.width = "100";
+                        document.body.appendChild(element);
+                        //append Name
+                        element = document.createElement("p");
+                        element.innerHTML = "Name: " + data[i].name;
+                        document.body.appendChild(element);
+                        //append price
+                        element = document.createElement("p");
+                        element.innerHTML = "Price: " + data[i].price;
+                        document.body.appendChild(element);
+                        //append created time
+                        element = document.createElement("p");
+                        element.innerHTML = "Time Created: " + data[i].timeCreated;
+                        document.body.appendChild(element);
+                        //append seperating line
+                        element = document.createElement("hr");
+                        document.body.appendChild(element);
+                    }  
+                }
+                function displayByPrice() {
+                    //document.body.innerHTML = "";
+                    data.sort(sortByElem("price"));
+                    fillStuff(data);
+                }
+                function displayByTime() {
+                    //document.body.innerHTML = "";
+                    
+                    data.sort(sortByElem("timeCreated"));
+                    fillStuff(data);
+                }
+                const filterPrice = (ev) =>  {
+                    ev.preventDefault();
+                    var thePrice = document.getElementById("leastPrice").value;
+                    var filtered = data.filter(a => a.price >= thePrice);
+                    if (filtered.length == 0) {
+                        alert("There is no token with the given condition!");
+                    }
+                    fillStuff(filtered);
+                }
+                const filterTime = (ev) => {
+                    ev.preventDefault();
+                    var theTime = document.getElementById("leastCreatedT").value;
+                    var filtered = data.filter(a => a.timeCreated >= theTime);
+                    if (filtered.length == 0) {
+                        alert("There is no token with the given condition!");
+                    }
+                    fillStuff(filtered);
+                }
+                document.addEventListener('DOMContentLoaded', ()=> {
+                document.getElementById('priceFilter').addEventListener('click', filterPrice)
+                });
+                document.addEventListener('DOMContentLoaded', ()=> {
+                document.getElementById('timeFilter').addEventListener('click', filterTime)
+                });
+            </script>
+        
+
+</body>
+</html> 
